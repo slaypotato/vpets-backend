@@ -5,7 +5,8 @@ import { AppointmentsModule } from './appointments/appointments.module';
 import { ProductsModule } from './products/products.module';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
-import { LOCAL_VAR_SCHEMA } from './common/variables.validator';
+import { LOCAL_VAR_SCHEMA } from './lib/variables.validator';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { LOCAL_VAR_SCHEMA } from './common/variables.validator';
     AppointmentsModule, 
     ProductsModule, 
     DatabaseModule, 
-    AuthModule,
+    AuthModule, 
+    UserModule,
   ],
 })
 export class AppModule {}
