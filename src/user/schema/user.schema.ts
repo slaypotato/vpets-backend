@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Clinic } from './clinic.schema';
 import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
@@ -31,6 +32,12 @@ export class User {
 
     @Prop()
     role: string;
+
+    @Prop({ required: false })
+    crmv: string;
+
+    @Prop({ required: false })
+    clinic: Clinic;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

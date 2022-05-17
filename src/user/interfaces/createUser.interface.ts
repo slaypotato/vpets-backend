@@ -1,4 +1,6 @@
-export default interface createUser {
+import ClinicInterface from "./clinic.interface";
+
+export default interface createUserInterface {
     userName: string;
     password: string;
     avatar: string;
@@ -6,4 +8,7 @@ export default interface createUser {
     middleName:string;
     lastName: string;
     aboutMe: string;
+    role: string;
+    crmv?: string;
+    clinic?:ClinicInterface;
 }
