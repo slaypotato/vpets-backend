@@ -28,8 +28,8 @@ export class ClinicService {
     }
 
     async searchClinicByClinicname(ClinicName: string): Promise<any> {
-        Logger.log(`Searching Clinic by Clinicname: ${ClinicName}`);
-        return await this.ClinicModel.findOne({ClinicName}).exec();
+        Logger.log(`Searching Clinic by Clinic Name: ${ClinicName}`);
+        return await this.ClinicModel.findOne({clinicName: {$regex: new RegExp("^" + ClinicName + "$", "i")}}).exec();
     }
 
     async isClinicValid(ClinicId): Promise<Boolean> {

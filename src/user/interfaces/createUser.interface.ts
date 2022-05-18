@@ -1,5 +1,6 @@
 import ClinicInterface from "./clinic.interface";
 
+
 export default interface createUserInterface {
     userName: string;
     password: string;
@@ -10,5 +11,5 @@ export default interface createUserInterface {
     aboutMe: string;
     role: string;
     crmv?: string;
-    clinic?:ClinicInterface;
+    clinic?:ClinicInterface
 }

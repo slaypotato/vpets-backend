@@ -3,7 +3,6 @@ import { InjectModel} from '@nestjs/mongoose';
 import { v4 as uuid } from 'uuid';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './schema/user.schema';
-import CreateUser from './interfaces/createUser.interface';
 import { ClinicService } from './clinic.service';
 
 @Injectable()
@@ -14,7 +13,7 @@ export class UserService {
         private readonly clinicService: ClinicService,
     ) {}
 
-    async createNewUser(newUser:CreateUser): Promise<User> {
+    async createNewUser(newUser:User): Promise<User> {
         const id = uuid();
         let user;
 
@@ -22,9 +21,9 @@ export class UserService {
         const searched = await this.searchUserByUsername(newUser.userName)
             .then((user) => {return user._id? true : false})
             .catch((e) => {Logger.error(e); return false})
-        if (!searched){
-            const clinic = this.checkClinic(newUser);
+        if (!searched){     
             if (newUser.crmv){
+                const clinic = await this.checkClinic(newUser);
                 user = new this.UserModel({_id: id, ...newUser, clinic: clinic}); 
             } else {
                 user = new this.UserModel({_id: id, ...newUser});
@@ -41,7 +40,7 @@ export class UserService {
 
     async searchUserByUsername(userName: string): Promise<any> {
         Logger.log(`Searching user by username: ${userName}`);
-        return await this.UserModel.findOne({userName}).exec();
+        return await this.UserModel.findOne({userName:{$regex: new RegExp("^" + userName + "$", "i")}}).exec();
     }
 
     async isUserValid(userId): Promise<Boolean> {
@@ -51,20 +50,27 @@ export class UserService {
         return found
     }
 
-    async updateUser(_id: string, user: any): Promise<User> {
+    async updateUser(_id: string, user: User): Promise<User> {
         Logger.log(`Updating user ${_id}`);
-        return await this.UserModel.findByIdAndUpdate(_id, user);
+        if (user.crmv) {
+            const clinic = await this.checkClinic(user);
+            console.log(user.clinic);
+            console.log(clinic);
+            return await this.UserModel.findByIdAndUpdate(_id, {...user,  clinic: clinic});
+        } else {
+            return await this.UserModel.findByIdAndUpdate(_id, user);
+        }
     }
 
-    async checkClinic({crmv, clinic}: CreateUser): Promise<any> {
+    async checkClinic({crmv, clinic}: User): Promise<any> {
         if (!crmv){
             throw new BadRequestException('Veterinarian needs to add CRMV number');
         }
-        const searched = this.clinicService.searchClinicByClinicname(clinic.clinicName);
+        const searched = await this.clinicService.searchClinicByClinicname(clinic.clinicName);
         if (searched){
             return searched;
         } else {
-            const newClinic = this.clinicService.createNewClinic(clinic);
+            const newClinic = await this.clinicService.createNewClinic(clinic);
             return newClinic;
         }
     }
