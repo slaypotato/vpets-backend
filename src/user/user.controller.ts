@@ -14,7 +14,7 @@ export class UserController {
   @Get(':id')
   @ApiParam({ name:'id', type:'string' })
   @ApiResponse({status:200, description: 'Usuário recuperado com sucesso'})
-  @ApiResponse({status:400, description: 'Usuário inexistente com sucesso'})
+  @ApiResponse({status:400, description: 'Usuário inexistente'})
   async getUserByID(@Param() { id }): Promise<User> {
     Logger.log(`Attempting to search for user: ${id}`)
     return this.userService.searchUserById(id);

@@ -16,6 +16,10 @@ export class Animal {
 
     @ApiProperty()
     @Prop()
+    ownerID: string;
+
+    @ApiProperty()
+    @Prop()
     type: string;
 
     @ApiProperty()

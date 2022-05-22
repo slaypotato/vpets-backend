@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Clinic } from './clinic.schema';
 import { ApiProperty } from '@nestjs/swagger';
 import { Document } from 'mongoose';
+import { Clinic } from './clinic.schema';
+import { Animal } from '../../animals/schemas/animal.schema';
 
 export type UserDocument = User & Document;
 
@@ -50,6 +51,10 @@ export class User {
     @ApiProperty()
     @Prop({ required: false })
     clinic?: Clinic;
+
+    @ApiProperty({type:Animal, isArray:true})
+    @Prop({ default:[], required:false })
+    animals?: [Animal];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
