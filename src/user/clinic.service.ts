@@ -32,15 +32,15 @@ export class ClinicService {
         return await this.ClinicModel.findOne({clinicName: {$regex: new RegExp("^" + ClinicName + "$", "i")}}).exec();
     }
 
-    async isClinicValid(ClinicId): Promise<Boolean> {
+    async isClinicValid(ClinicId: string): Promise<Boolean> {
         const found = await this.searchClinicById(ClinicId)
             .then((Clinic) => {return Clinic._id ? true : false })
             .catch((e) => {Logger.error(e); return false});
         return found
     }
 
-    async updateClinic(_id: string, Clinic: any): Promise<Clinic> {
+    async updateClinic(_id: string, clinic: Clinic): Promise<Clinic> {
         Logger.log(`Updating Clinic ${_id}`);
-        return await this.ClinicModel.findByIdAndUpdate(_id, Clinic);
+        return await this.ClinicModel.findByIdAndUpdate(_id, clinic);
     }
 }
