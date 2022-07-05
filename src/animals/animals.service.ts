@@ -47,13 +47,23 @@ export class AnimalsService {
 
     async updateAnimal(_id: string, animal: Animal): Promise<Animal> {
         Logger.log(`Updating Animal ${_id}`);
-        return await this.AnimalModel.findByIdAndUpdate(_id, animal);
+        const updatedAnimal = await this.AnimalModel.findByIdAndUpdate(_id, animal);
+        this.addAnimaltoUser(animal);
+        return updatedAnimal;
     }
 
     async addAnimaltoUser(animal: Animal): Promise<User> {
         const user = await this.userService.searchUserById(animal.ownerID);
-        user.animals.push(animal);
-        Logger.log(`Adding animal ${animal._id} to user ${user._id}`);
-        return this.userService.updateUser(user._id, user);
+        if (user.animals.includes(animal)) {
+            const index = user.animals.findIndex((currentAnimal) => {currentAnimal._id === animal._id});
+            Logger.log(`Updating animal ${animal._id} to user ${user._id}`);
+            return this.userService.updateUser(user._id, user);
+            user.animals[index] = animal
+        } else {
+            user.animals.push(animal);
+            Logger.log(`Adding animal ${animal._id} to user ${user._id}`);
+            return this.userService.updateUser(user._id, user);
+        }
+        
     }
 }
