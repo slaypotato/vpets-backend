@@ -21,6 +21,7 @@ DB_URI=<DB localtion>
 DB_USER=<DB username>
 DB_PASS=<DB Password>
 DB_NAME=<DB Name>
+JWT_SECRET=<JWT Secret>
 ```
 
 ## Running the app
