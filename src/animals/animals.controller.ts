@@ -1,9 +1,11 @@
-import { Controller, Param, Get, Post, Put, Body, Logger } from '@nestjs/common';
+import { Controller, Param, Get, Post, Put, Body, Logger, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiExtraModels, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AnimalsService } from './animals.service';
 import { Animal } from './schemas/animal.schema';
 
 @ApiTags('Animals')
+@UseGuards(JwtAuthGuard)
 @Controller('animals')
 @ApiExtraModels(Animal)
 export class AnimalsController {

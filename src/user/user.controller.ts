@@ -1,17 +1,18 @@
-import { Controller, Param, Get, Post, Put, Body, Logger } from '@nestjs/common';
-import { ApiBody, ApiExtraModels, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import CreateUser from './interfaces/createUser.interface';
-import UserInterface from './interfaces/user.interface';
+import { Controller, Param, Get, Post, Put, Body, Logger, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiExtraModels, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from './schema/user.schema';
 import { UserService } from './user.service';
 
 @ApiTags('User')
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 @ApiExtraModels(User)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get(':id')
+  @ApiBearerAuth('access_token')
   @ApiParam({ name:'id', type:'string' })
   @ApiResponse({status:200, description: 'Usuário recuperado com sucesso'})
   @ApiResponse({status:400, description: 'Usuário inexistente'})
